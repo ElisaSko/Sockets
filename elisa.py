@@ -2,19 +2,31 @@
 #liste de mot à lire
 #numéro de serveur ? 34000
 
+##modules
 
+import socket
+import argparse
 
 ##Arguments
+parser = argparse.ArgumentParser(description='Some description.')
 
+parser.add_argument('-c',help='A flag. When True, is a client', action='store_true')
 
+args = parser.parse_args()
 
 
 
 
 # create an INET, STREAMing socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# now connect to the web server on port 80 - the normal http port
-s.connect((34000, 80)) #à utiliser quand on est le client
+
+## on se connecte selon que c'est un client ou un serveur
+if args.c == True:
+    s.connect(('localhost', 34000))  #à utiliser quand on est le client
+else:
+    s.bind(('127001',34000))      #à utiliser quand on est le serveur
+    s.listen()
+    (client_socket, adrr) = s.accept()
 
 
 class MySocket:
