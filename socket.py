@@ -18,9 +18,6 @@ s.connect((34000, 80)) #à utiliser quand on est le client
 
 
 class MySocket:
-    """demonstration class only
-      - coded for clarity, not efficiency
-    """
 
     def __init__(self, sock=None):
         if sock is None:
