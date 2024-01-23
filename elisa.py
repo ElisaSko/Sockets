@@ -1,7 +1,3 @@
-#client ou serveur
-#liste de mot à lire
-#numéro de serveur ? 34000
-
 ##modules
 
 import socket
@@ -23,20 +19,22 @@ handler=logging.StreamHandler(sys.stderr)
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
+##variables
 HANDSHAKE_MSG = b'hello'
 HANDSHAKE_REPLY = b'hi'
 
 # create an INET, STREAMing socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-## on se connecte selon que c'est un client ou un serveur
-if args.c == True:
-    host=args.host
+def connect_client(host):
     s.connect((host, 34000))  #a utiliser quand on est le client
     logger.debug('connected')
     s.send(HANDSHAKE_MSG)
     logger.debug('sent handshake')
-else:
+    s.recv(len(HANDSHAKE_REPLY))
+    logger.debug('received handshake reply')
+
+def connect_server():
     s.bind(('',34000))      #a utiliser quand on est le serveur
     s.listen()
     (client_socket, adrr) = s.accept()
@@ -45,3 +43,9 @@ else:
     logger.debug('received handshake')
     client_socket.send(HANDSHAKE_REPLY)
     logger.debug('sent handshake reply')
+
+## on se connecte selon que c'est un client ou un serveur
+if args.c == True:
+    connect_client(args.host)
+else:
+    connect_server()
