@@ -14,8 +14,8 @@ parser.add_argument('-c',help='A flag. When True, is a client', action='store_tr
 
 args = parser.parse_args()
 
-
-
+HANDSHAKE_MSG = b'hello'
+HANDSHAKE_REPLY = b'hi'
 
 # create an INET, STREAMing socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -23,9 +23,13 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ## on se connecte selon que c'est un client ou un serveur
 if args.c == True:
     s.connect(('localhost', 34000))  #a utiliser quand on est le client
-    s.send(b'hello')
+    print('connected')
+    s.send(HANDSHAKE_MSG)
+    print('sent')
 else:
     s.bind(('',34000))      #a utiliser quand on est le serveur
     s.listen()
     (client_socket, adrr) = s.accept()
-    s.recv(b'hi')
+    print('accepted')
+    client_socket.recv(len(HANDSHAKE_MSG))
+    client_socket.send(HANDSHAKE_REPLY)
